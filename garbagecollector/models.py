@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -11,6 +12,7 @@ class Organization(models.Model):
     manager_name = models.CharField(max_length=100)
     manager_phone = models.CharField(max_length=12)
     manager_email = models.EmailField()
+    checked = models.BooleanField(default=False)
 
     def __str__(self):
             return self.name
@@ -27,4 +29,13 @@ class Trash(models.Model):
     def __str__(self):
         return self.name
 
-    
+
+class UserMessage(models.Model):
+    creation_date =  models.DateTimeField(auto_now_add=True)
+    subject = models.CharField(max_length=100)
+    message = models.CharField(max_length=250)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject
+

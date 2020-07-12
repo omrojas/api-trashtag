@@ -1,6 +1,7 @@
-from graphene_django.types import DjangoObjectType
 from django.contrib.auth import get_user_model
-from garbagecollector.models import Trash
+from graphene_django.types import DjangoObjectType
+
+from garbagecollector.models import Organization, Trash
 
 
 class UserType(DjangoObjectType):
@@ -12,3 +13,8 @@ class TrashType(DjangoObjectType):
     class Meta:
         model = Trash
 
+
+class OrganizationType(DjangoObjectType):
+    class Meta:
+        model = Organization
+        fields = ('id', 'name')
