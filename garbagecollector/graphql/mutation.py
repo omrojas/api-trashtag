@@ -19,7 +19,7 @@ class SignUp(graphene.Mutation):
 
     saved = graphene.Boolean()
     
-    def mutate(self, info, firstName, lastName, password, email, organization_id):
+    def mutate(self, info, firstName, lastName, password, email, organization_id=None):
         try:
             user = User.objects.create_user(username=email, email=email, password=password, first_name=firstName, last_name=lastName)
             user.save()
