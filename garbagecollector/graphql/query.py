@@ -16,8 +16,7 @@ class Query(object):
             return Trash.objects.all()
         except Exception as e:
             return []
-
-    @login_required
+   
     def resolve_all_organizations(self, info, **kwargs):
         try:
             return Organization.objects.filter(checked=True)
