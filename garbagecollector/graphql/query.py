@@ -3,12 +3,13 @@ from graphql_jwt.decorators import login_required
 
 from garbagecollector.models import Organization, Trash
 
-from .types import OrganizationType, TrashType
+from .types import OrganizationType, TrashType, UserType
 
 
 class Query(object):
     all_trashes = graphene.List(TrashType)
     all_organizations = graphene.List(OrganizationType)
+    user_information = graphene.Field(UserType)
 
     @login_required
     def resolve_all_trashes(self, info, **kwargs):
@@ -23,3 +24,10 @@ class Query(object):
         except Exception as e:
             return []
 
+    @login_required
+    def resolve_user_information(self, info, **kwargs):
+        try:
+            user = info.context.user
+            return user
+        except Exception as e:
+            return None

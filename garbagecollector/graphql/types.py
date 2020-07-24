@@ -7,6 +7,7 @@ from garbagecollector.models import Organization, Trash
 class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
+        fields = ('first_name', 'last_name')
 
 
 class TrashType(DjangoObjectType):
