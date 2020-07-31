@@ -21,7 +21,7 @@ class UserMessageAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'lavel')
+    list_display = ('user', 'level')
 
 
 class TrashAdmin(admin.ModelAdmin):

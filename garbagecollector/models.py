@@ -50,7 +50,7 @@ class Level(models.Model):
 
 class UserProfile(models.Model):  
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    lavel = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True,)
+    level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True,)
 
     def __str__(self):
         return self.user.username
