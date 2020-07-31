@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 
-from garbagecollector.models import (Level, Organization, UserMessage,
-                                     UserProfile)
+from garbagecollector.models import (Cleanup, Level, Organization, Trash,
+                                     TrashCleanup, UserMessage, UserProfile)
+
+from .types import TrashQuantity
 
 
 class SignUp(graphene.Mutation):
@@ -81,6 +83,29 @@ class CreateUserMessage(graphene.Mutation):
             raise GraphQLError('A problem has occurred, check the data or try again.')
 
 
+class CleanUp(graphene.Mutation):
+    class Arguments:
+        trashes = graphene.List(TrashQuantity, required=True)
+
+    saved = graphene.Boolean()
+
+    @login_required
+    def mutate(self, info, trashes):
+        try:
+            user = info.context.user
+            cleanup = Cleanup(user=user)
+            cleanup.save()
+
+            for e in trashes:
+                trash = Trash.objects.get(id=e.trashId)
+                trashCleanup = TrashCleanup(cleanup=cleanup, trash=trash, quantity=e.quantity)
+                trashCleanup.save()
+
+            return CleanUp(saved=True)
+        except expression as identifier:
+            raise GraphQLError('A problem has occurred, check the data or try again.')
+
+
 class Mutation(graphene.ObjectType):
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
@@ -88,3 +113,4 @@ class Mutation(graphene.ObjectType):
     sign_up = SignUp.Field()
     create_organization = CreateOrganization.Field()
     create_user_message = CreateUserMessage.Field()
+    cleanup = CleanUp.Field()

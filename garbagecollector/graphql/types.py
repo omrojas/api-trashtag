@@ -1,3 +1,4 @@
+import graphene
 from django.contrib.auth import get_user_model
 from graphene_django.types import DjangoObjectType
 
@@ -19,3 +20,8 @@ class OrganizationType(DjangoObjectType):
     class Meta:
         model = Organization
         fields = ('id', 'name')
+
+
+class TrashQuantity(graphene.InputObjectType):
+    trashId = graphene.Int(required=True)
+    quantity = graphene.Int(required=True)
