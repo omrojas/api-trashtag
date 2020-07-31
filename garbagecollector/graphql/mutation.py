@@ -1,6 +1,7 @@
 import graphene
 import graphql_jwt
 from django.contrib.auth.models import User
+from django.db.models import Min, Sum
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 
@@ -93,16 +94,20 @@ class CleanUp(graphene.Mutation):
     def mutate(self, info, trashes):
         try:
             user = info.context.user
-            cleanup = Cleanup(user=user)
-            cleanup.save()
+            if len(trashes) > 0:
+                cleanup = Cleanup(user=user)
+                cleanup.save()
+                
+                for e in trashes:
+                    trash = Trash.objects.get(id=e.trashId)
+                    trashCleanup = TrashCleanup(cleanup=cleanup, trash=trash, quantity=e.quantity)
+                    trashCleanup.save()
 
-            for e in trashes:
-                trash = Trash.objects.get(id=e.trashId)
-                trashCleanup = TrashCleanup(cleanup=cleanup, trash=trash, quantity=e.quantity)
-                trashCleanup.save()
+                update_user_level(user)
+                return CleanUp(saved=True)
 
-            return CleanUp(saved=True)
-        except expression as identifier:
+            return CleanUp(saved=False)
+        except Exception as e:
             raise GraphQLError('A problem has occurred, check the data or try again.')
 
 
@@ -114,3 +119,16 @@ class Mutation(graphene.ObjectType):
     create_organization = CreateOrganization.Field()
     create_user_message = CreateUserMessage.Field()
     cleanup = CleanUp.Field()
+
+
+def update_user_level(user):
+    try:
+        profile = UserProfile.objects.filter(user=user).first()
+        garbageCollected = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
+        nextLevelCleanups= Level.objects.filter(cleanups__gte=garbageCollected).aggregate(Min('cleanups'))['cleanups__min']
+        nextLevel = Level.objects.filter(cleanups=nextLevelCleanups).first()
+        if (profile.level is not None) and (nextLevel is not None) and (profile.level.id != nextLevel.id):
+            profile.level = nextLevel
+            profile.save()
+    except Exception as e:
+        print(e)
