@@ -4,9 +4,8 @@ from django.contrib.auth.models import User
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 
-from garbagecollector.models import Organization, UserMessage
-
-from .types import UserType
+from garbagecollector.models import (Level, Organization, UserMessage,
+                                     UserProfile)
 
 
 class SignUp(graphene.Mutation):
@@ -21,9 +20,19 @@ class SignUp(graphene.Mutation):
     
     def mutate(self, info, firstName, lastName, password, email, organization_id=None):
         try:
+            level = Level.objects.get(id=1)
+
             user = User.objects.create_user(username=email, email=email, password=password, first_name=firstName, last_name=lastName)
             user.save()
             saved = user.id != None
+
+            profile = UserProfile(user=user, level=level)
+            profile.save()
+
+            if saved and organization_id is not None:
+                # TODO linkt organization id and user
+                print(organization_id)
+
             return SignUp(saved=saved)
         except Exception as e:
             print(e)
