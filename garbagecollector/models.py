@@ -39,3 +39,37 @@ class UserMessage(models.Model):
     def __str__(self):
         return self.subject
 
+
+class Level(models.Model):
+    name = models.CharField(max_length=100)
+    cleanups = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
+
+
+class UserProfile(models.Model):  
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    lavel = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True,)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Cleanup(models.Model):
+    creation_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}'.format(self.id)
+
+
+class TrashCleanup(models.Model):
+    cleanup = models.ForeignKey(Cleanup, on_delete=models.CASCADE)
+    trash = models.ForeignKey(Trash, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    
+
+    def __str__(self):
+        return self.trash.name
+
