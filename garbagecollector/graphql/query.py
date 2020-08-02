@@ -40,6 +40,7 @@ class Query(object):
             user = info.context.user
             cleanups = TrashCleanup.objects.filter(cleanup__user=user).count()
             itemsPicked = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
+            itemsPicked =  0 if itemsPicked is None else itemsPicked
             nextLevelCleanups= Level.objects.filter(cleanups__gte=itemsPicked).aggregate(Min('cleanups'))['cleanups__min']
             itemsToNextLevel = 0
 
