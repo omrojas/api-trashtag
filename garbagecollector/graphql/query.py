@@ -2,7 +2,8 @@ import graphene
 from django.db.models import Min, Sum
 from graphql_jwt.decorators import login_required
 
-from garbagecollector.models import Level, Organization, Trash, TrashCleanup
+from garbagecollector.models import (Cleanup, Level, Organization, Trash,
+                                     TrashCleanup)
 
 from .types import OrganizationType, TrashType, UserStatistics, UserType
 
@@ -38,7 +39,7 @@ class Query(object):
     def resolve_user_statistics(self, info, **kwargs):
         try:
             user = info.context.user
-            cleanups = TrashCleanup.objects.filter(cleanup__user=user).count()
+            cleanups = Cleanup.objects.filter(user=user).count()
             itemsPicked = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
             itemsPicked =  0 if itemsPicked is None else itemsPicked
             nextLevelCleanups= Level.objects.filter(cleanups__gte=itemsPicked).aggregate(Min('cleanups'))['cleanups__min']
