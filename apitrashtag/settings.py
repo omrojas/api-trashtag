@@ -148,9 +148,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+JWT_EXPIRATION_MINUTES = config('JWT_EXPIRATION', default=10, cast=int)
 GRAPHQL_JWT = {
     'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=10),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=JWT_EXPIRATION_MINUTES),
 }
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
