@@ -99,9 +99,10 @@ class CleanUp(graphene.Mutation):
                 cleanup.save()
                 
                 for e in trashes:
-                    trash = Trash.objects.get(id=e.trashId)
-                    trashCleanup = TrashCleanup(cleanup=cleanup, trash=trash, quantity=e.quantity)
-                    trashCleanup.save()
+                    if e.quantity > 0:
+                        trash = Trash.objects.get(id=e.trashId)
+                        trashCleanup = TrashCleanup(cleanup=cleanup, trash=trash, quantity=e.quantity)
+                        trashCleanup.save()
 
                 update_user_level(user)
                 return CleanUp(saved=True)
