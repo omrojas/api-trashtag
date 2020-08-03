@@ -147,8 +147,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-
-JWT_EXPIRATION_MINUTES = config('JWT_EXPIRATION', default=10, cast=int)
+JWT_EXPIRATION_MINUTES = config('JWT_EXPIRATION_MINUTES', default=10, cast=int)
 GRAPHQL_JWT = {
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': timedelta(minutes=JWT_EXPIRATION_MINUTES),
