@@ -25,7 +25,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 class TrashAdmin(admin.ModelAdmin):
-    list_display = ('name', 'creation_date', 'image_url')
+    list_display = ('name', 'creation_date', 'image_url', 'icon_url')
 
 
 class TrashCleanupAdmin(admin.ModelAdmin):
