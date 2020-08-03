@@ -25,6 +25,7 @@ class Trash(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100)
     image_url = models.CharField(max_length=250, null=True)
+    icon_url = models.CharField(max_length=250, null=True)
 
     def __str__(self):
         return self.name
