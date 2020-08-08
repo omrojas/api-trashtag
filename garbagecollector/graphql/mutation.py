@@ -6,7 +6,8 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 
 from garbagecollector.models import (Cleanup, Level, Organization, Trash,
-                                     TrashCleanup, UserMessage, UserProfile)
+                                     TrashCleanup, UserMessage,
+                                     UserOrganization, UserProfile)
 
 from .types import TrashQuantity
 
@@ -33,12 +34,12 @@ class SignUp(graphene.Mutation):
             profile.save()
 
             if saved and organization_id is not None:
-                # TODO linkt organization id and user
-                print(organization_id)
+                organization = Organization.objects.get(pk=organization_id)
+                user_organization = UserOrganization(user=user, organization=organization)
+                user_organization.save()
 
             return SignUp(saved=saved)
         except Exception as e:
-            print(e)
             raise GraphQLError('A problem has occurred, check the data or try again.')
 
 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Cleanup, Level, Organization, Trash, TrashCleanup,
-                     UserMessage, UserProfile)
+                     UserMessage, UserOrganization, UserProfile)
 
 
 class CleanupAdmin(admin.ModelAdmin):
@@ -32,10 +32,15 @@ class TrashCleanupAdmin(admin.ModelAdmin):
     list_display = ('cleanup', 'trash', 'quantity')
 
 
+class UserOrganizationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'organization')
+
+
 admin.site.register(Cleanup, admin_class=CleanupAdmin)
 admin.site.register(Level, admin_class=LevelAdmin)
 admin.site.register(Organization, admin_class=OrganizationAdmin)
 admin.site.register(UserMessage, admin_class=UserMessageAdmin)
+admin.site.register(UserOrganization, admin_class=UserOrganizationAdmin)
 admin.site.register(UserProfile, admin_class=UserProfileAdmin)
 admin.site.register(Trash, admin_class=TrashAdmin)
 admin.site.register(TrashCleanup, admin_class=TrashCleanupAdmin)
