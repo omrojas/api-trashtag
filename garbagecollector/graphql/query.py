@@ -40,22 +40,22 @@ class Query(object):
         try:
             user = info.context.user
             profile = UserProfile.objects.filter(user=user).first()
-            cleanups = Cleanup.objects.filter(user=user).count()
-            itemsPicked = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
-            itemsPicked =  0 if itemsPicked is None else itemsPicked
+            user_level = profile.level
 
-            nextLevels= Level.objects.filter(cleanups__gt=itemsPicked).order_by('cleanups')
-            nextLevel = nextLevels.first()
-            nextLevelName =  '' if nextLevel is None else nextLevel.name
-            itemsToNextLevel = 0 if nextLevel is None else nextLevel.cleanups - itemsPicked
-            currentLevelName =  '' if profile.level is None else profile.level.name
-            
+            cleanups = Cleanup.objects.filter(user=user).count()
+            items_picked = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
+            items_picked =  0 if items_picked is None else items_picked
+
+            next_level = Level.objects.filter(cleanups__gt=user_level.cleanups).order_by('cleanups').first()
+            next_level_name = '' if next_level is None else next_level.name
+            items_to_next_level = None if next_level is None else user_level.cleanups - items_picked
+
             return {
                 'cleanups': cleanups,
-                'itemsPicked': itemsPicked,
-                'nextLevel': nextLevelName,
-                'itemsToNextLevel': itemsToNextLevel,
-                'currentLevel': currentLevelName,
+                'itemsPicked': items_picked,
+                'nextLevel': next_level_name,
+                'itemsToNextLevel': items_to_next_level,
+                'currentLevel': user_level.name,
             }
         except Exception as e:
             return None
