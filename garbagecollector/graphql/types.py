@@ -31,6 +31,7 @@ class UserStatistics(graphene.ObjectType):
     cleanups = graphene.Int()
     items_picked = graphene.Int()
     items_to_next_level = graphene.Int()
+    next_level = graphene.String()
 
     def resolve_cleanups(statistics, info):
         return statistics['cleanups']
@@ -40,4 +41,7 @@ class UserStatistics(graphene.ObjectType):
 
     def resolve_items_to_next_level(statistics,info):
         return statistics['itemsToNextLevel']
+
+    def resolve_next_level(statistics,info):
+        return statistics['nextLevel']
 

@@ -42,15 +42,16 @@ class Query(object):
             cleanups = Cleanup.objects.filter(user=user).count()
             itemsPicked = TrashCleanup.objects.filter(cleanup__user=user).aggregate(Sum('quantity'))['quantity__sum']
             itemsPicked =  0 if itemsPicked is None else itemsPicked
-            nextLevelCleanups= Level.objects.filter(cleanups__gte=itemsPicked).aggregate(Min('cleanups'))['cleanups__min']
-            itemsToNextLevel = 0
 
-            if nextLevelCleanups is not None:
-                itemsToNextLevel = nextLevelCleanups - itemsPicked
-
+            nextLevels= Level.objects.filter(cleanups__gt=itemsPicked).order_by('cleanups')
+            nextLevel = nextLevels.first()
+            nextLevelName =  '' if nextLevel is None else nextLevel.name
+            itemsToNextLevel = 0 if nextLevel is None else nextLevel.cleanups - itemsPicked
+            
             return {
                 'cleanups': cleanups,
                 'itemsPicked': itemsPicked,
+                'nextLevel': nextLevelName,
                 'itemsToNextLevel': itemsToNextLevel
             }
         except Exception as e:
