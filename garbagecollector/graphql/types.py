@@ -49,3 +49,24 @@ class UserStatistics(graphene.ObjectType):
     def resolve_current_level(statistics,info):
         return statistics['currentLevel']
 
+
+class PickedUpLitterPerMonth(graphene.ObjectType):
+    month = graphene.Int()
+    quantity = graphene.Int()
+    
+    def resolve_month(data, info):
+        return data[0]
+
+    def resolve_quantity(data, info):
+        return data[1]
+
+
+class LitterByItems(graphene.ObjectType):
+    garbage = graphene.String()
+    quantity = graphene.Int()
+    
+    def resolve_garbage(data, info):
+        return data[0]
+
+    def resolve_quantity(data, info):
+        return data[1]

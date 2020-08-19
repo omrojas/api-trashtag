@@ -1,3 +1,5 @@
+import datetime
+
 import graphene
 from django.db.models import Min, Sum
 from graphql_jwt.decorators import login_required
@@ -5,7 +7,8 @@ from graphql_jwt.decorators import login_required
 from garbagecollector.models import (Cleanup, Level, Organization, Trash,
                                      TrashCleanup, UserProfile)
 
-from .types import OrganizationType, TrashType, UserStatistics, UserType
+from .types import (LitterByItems, OrganizationType, PickedUpLitterPerMonth,
+                    TrashType, UserStatistics, UserType)
 
 
 class Query(object):
@@ -13,6 +16,9 @@ class Query(object):
     all_organizations = graphene.List(OrganizationType)
     user_information = graphene.Field(UserType)
     user_statistics = graphene.Field(UserStatistics)
+    picked_up_litter_per_month = graphene.List(PickedUpLitterPerMonth)
+    volunteers_number = graphene.Int()
+    quantity_of_litter_by_items = graphene.List(LitterByItems)
 
     @login_required
     def resolve_all_trashes(self, info, **kwargs):
@@ -59,3 +65,37 @@ class Query(object):
             }
         except Exception as e:
             return None
+
+
+    @login_required
+    def resolve_picked_up_litter_per_month(self, info, **kwargs):
+        try:
+            now = datetime.datetime.now()
+            
+            return (
+                TrashCleanup.objects
+                .filter(cleanup__creation_date__year=now.year)
+                .values_list('cleanup__creation_date__month')
+                .annotate(quantity=Sum('quantity'))
+            )
+        except Exception as e:
+            return []
+
+
+    def resolve_volunteers_number(self, info, **kwargs):
+        try:
+            volunteers = UserProfile.objects.count()
+            return volunteers
+        except Exception as e:
+            return None
+
+
+    def resolve_quantity_of_litter_by_items(self, info, **kwargs):
+        try:
+            return (
+                TrashCleanup.objects
+                .values_list('trash__name')
+                .annotate(quantity=Sum('quantity'))
+            )
+        except Exception as e:
+            return[]
