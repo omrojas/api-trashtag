@@ -33,6 +33,7 @@ class UserStatistics(graphene.ObjectType):
     items_to_next_level = graphene.Int()
     next_level = graphene.String()
     current_level = graphene.String()
+    current_level_icon = graphene.String()
 
     def resolve_cleanups(statistics, info):
         return statistics['cleanups']
@@ -48,6 +49,9 @@ class UserStatistics(graphene.ObjectType):
 
     def resolve_current_level(statistics,info):
         return statistics['currentLevel']
+
+    def resolve_current_level_icon(statistics,info):
+        return statistics['currentLevelIcon']
 
 
 class PickedUpLitterPerMonth(graphene.ObjectType):

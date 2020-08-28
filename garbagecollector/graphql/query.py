@@ -62,6 +62,7 @@ class Query(object):
                 'nextLevel': next_level_name,
                 'itemsToNextLevel': items_to_next_level,
                 'currentLevel': user_level.name,
+                'currentLevelIcon': user_level.icon_url,
             }
         except Exception as e:
             return None
