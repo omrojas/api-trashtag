@@ -60,6 +60,8 @@ class UserProfile(models.Model):
 class Cleanup(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    latitude = models.CharField(max_length=20, null=True)
+    longitude = models.CharField(max_length=20, null=True)
 
     def __str__(self):
         return '{}'.format(self.id)

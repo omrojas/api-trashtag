@@ -88,15 +88,17 @@ class CreateUserMessage(graphene.Mutation):
 class CleanUp(graphene.Mutation):
     class Arguments:
         trashes = graphene.List(TrashQuantity, required=True)
+        latitude = graphene.String(required=True)
+        longitude = graphene.String(required=True)
 
     saved = graphene.Boolean()
 
     @login_required
-    def mutate(self, info, trashes):
+    def mutate(self, info, trashes, latitude, longitude):
         try:
             user = info.context.user
             if len(trashes) > 0:
-                cleanup = Cleanup(user=user)
+                cleanup = Cleanup(user=user, latitude=latitude, longitude=longitude)
                 cleanup.save()
                 
                 for e in trashes:
