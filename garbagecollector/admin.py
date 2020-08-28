@@ -10,7 +10,7 @@ class CleanupAdmin(ImportExportModelAdmin):
 
 
 class LevelAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'cleanups')
+    list_display = ('name', 'cleanups', 'icon_url')
 
 
 class OrganizationAdmin(ImportExportModelAdmin):

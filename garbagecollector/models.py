@@ -43,6 +43,7 @@ class UserMessage(models.Model):
 
 class Level(models.Model):
     name = models.CharField(max_length=100)
+    icon_url = models.CharField(max_length=250, null=True)
     cleanups = models.IntegerField()
     
     def __str__(self):
