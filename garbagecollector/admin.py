@@ -1,38 +1,39 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import (Cleanup, Level, Organization, Trash, TrashCleanup,
                      UserMessage, UserOrganization, UserProfile)
 
 
-class CleanupAdmin(admin.ModelAdmin):
+class CleanupAdmin(ImportExportModelAdmin):
     list_display = ('user', 'creation_date',  'latitude', 'longitude')
 
 
-class LevelAdmin(admin.ModelAdmin):
+class LevelAdmin(ImportExportModelAdmin):
     list_display = ('name', 'cleanups')
 
 
-class OrganizationAdmin(admin.ModelAdmin):
+class OrganizationAdmin(ImportExportModelAdmin):
     list_display = ('name', 'operation_area', 'phone_one', 'phone_two', 'address', 'manager_name', 'manager_phone', 'manager_email', 'checked')
 
 
-class UserMessageAdmin(admin.ModelAdmin):
+class UserMessageAdmin(ImportExportModelAdmin):
     list_display = ('user', 'subject', 'message', 'creation_date')
 
 
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(ImportExportModelAdmin):
     list_display = ('user', 'level')
 
 
-class TrashAdmin(admin.ModelAdmin):
+class TrashAdmin(ImportExportModelAdmin):
     list_display = ('name', 'creation_date', 'image_url', 'icon_url')
 
 
-class TrashCleanupAdmin(admin.ModelAdmin):
+class TrashCleanupAdmin(ImportExportModelAdmin):
     list_display = ('cleanup', 'trash', 'quantity')
 
 
-class UserOrganizationAdmin(admin.ModelAdmin):
+class UserOrganizationAdmin(ImportExportModelAdmin):
     list_display = ('user', 'organization')
 
 
