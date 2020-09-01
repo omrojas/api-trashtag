@@ -6,7 +6,7 @@ from .models import (Cleanup, Level, Organization, Trash, TrashCleanup,
 
 
 class CleanupAdmin(ImportExportModelAdmin):
-    list_display = ('user', 'creation_date',  'latitude', 'longitude')
+    list_display = ('id', 'user', 'creation_date',  'latitude', 'longitude')
 
 
 class LevelAdmin(ImportExportModelAdmin):
